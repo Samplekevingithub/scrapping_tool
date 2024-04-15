@@ -6,26 +6,24 @@
     <title>Scraped Data</title>
 </head>
 <body>
-   <!-- <h1>Scraped Data for "{{ category }} {{city}}"</h1>
+    <h1>Scraped Data</h1>
     <table border="1">
         <tr>
             <th>Name</th>
             <th>Rating</th>
-            <th>Address</th>
-            <th>Phone</th>
+            <th>Addresses</th>
+            <th>Phones</th>
         </tr>
-        {% for item in data %}
+        {% for item in results %}
             <tr>
-                <td>{{ item.name }}</td>
-                <td>{{ item.rating }}</td>
-                <td>{{ item.address }}</td>
-                <td>{{ item.phone }}</td>
+                <td>{{ item['name'] }}</td>
+                <td>{{ item['rating'] }}</td>
+                <td>{{ item['addresses'] }} </td>
+                <td>{{ item['phones'] }} </td>
             </tr>
         {% endfor %}
     </table>
-    <br>-->
+    <br>
     <a href="/">Back to Categories</a>
 </body>
 </html>
-
-
