@@ -15,12 +15,14 @@
             <th>Phones</th>
         </tr>
         {% for item in results %}
+            {% if item['name'] %}
             <tr>
                 <td>{{ item['name'] }}</td>
                 <td>{{ item['rating'] }}</td>
                 <td>{{ item['addresses'] }} </td>
                 <td>{{ item['phones'] }} </td>
             </tr>
+            {% endif %}
         {% endfor %}
     </table>
     <br>

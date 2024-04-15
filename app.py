@@ -25,10 +25,10 @@ def scrape_google_local_services(search_key):
     for element in elements:
         item = {}
         try:
-            item['name'] = element.find_element(By.CSS_SELECTOR, '.rgnuSb').text.strip()
-            item['rating'] = element.find_element(By.CSS_SELECTOR, '.OJbIQb').text.strip()
-            item['addresses'] = element.find_element(By.XPATH, './/span[2][contains(@class, "hGz87c")]').text.strip()
-            item['phones'] = element.find_element(By.XPATH, './/span[3][contains(@class, "hGz87c")]').text.strip()
+            item['name'] = element.find_element(By.CSS_SELECTOR, '.rgnuSb').text
+            item['rating'] = element.find_element(By.CSS_SELECTOR, '.OJbIQb').text
+            item['addresses'] = element.find_element(By.XPATH, './/span[2][contains(@class, "hGz87c")]').text
+            item['phones'] = element.find_element(By.XPATH, './/span[3][contains(@class, "hGz87c")]').text
 
             data.append(item)
         except Exception as e:
