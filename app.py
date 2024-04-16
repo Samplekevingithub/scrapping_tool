@@ -63,6 +63,9 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
-
+'''<button class="VfPpkd-LgbsSe VfPpkd-LgbsSe-OWXEXe-INsAgc VfPpkd-LgbsSe-OWXEXe-dgl2Hf Rj2Mlf OLiIxf PDpWxe P62QJc LQeN7 sspfN Ehmv4e cLUxtc" 
+jscontroller="soHxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;mlnRJb:fLiPzd" 
+data-idom-class="Rj2Mlf OLiIxf PDpWxe P62QJc LQeN7 sspfN Ehmv4e cLUxtc" aria-label="Next"><div class="VfPpkd-Jh9lGc"></div>
+<div class="VfPpkd-J1Ukfc-LhBDec"></div><div class="VfPpkd-RLmnJb"></div><span jsname="V67aGc" class="VfPpkd-vQzf8d">Next &gt;</span></button>'''
 
 
