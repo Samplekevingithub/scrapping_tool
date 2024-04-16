@@ -2,11 +2,13 @@ from flask import Flask, render_template, request
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
 app = Flask(__name__)
 
-def scrape_google_local_services(search_key):
+def scrape_google_local_services(city,search_key):
     driver = webdriver.Chrome()
 
     # Open the Google Local Services page
@@ -25,15 +27,15 @@ def scrape_google_local_services(search_key):
     for element in elements:
         item = {}
         try:
-            item['name'] = element.find_element(By.CSS_SELECTOR, '.rgnuSb').text
+            driver.execute_script("arguments[0].scrollIntoView();", element)
+            item['name'] = element.find_element(By.CSS_SELECTOR, '.rgnuSb').text.strip()
             item['rating'] = element.find_element(By.CSS_SELECTOR, '.OJbIQb').text
             item['addresses'] = element.find_element(By.XPATH, './/span[2][contains(@class, "hGz87c")]').text
             item['phones'] = element.find_element(By.XPATH, './/span[3][contains(@class, "hGz87c")]').text
-
             data.append(item)
         except Exception as e:
             print("Error occurred:", e)
-
+            WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="yDmH0d"]/c-wiz[2]/div/div[3]/div/div/div[1]/div[3]/div[3]/c-wiz/div/div/div[2]/div/div/button'))).click()
     driver.quit()  # Quit the driver after scraping
     return data
 
@@ -41,12 +43,26 @@ def scrape_google_local_services(search_key):
 def index():
     return render_template('index.html')
 
+'''@app.route("/scraped", methods=['POST'])
+def scraped():
+    if request.method == "POST":
+        category = request.form['category']
+        city = request.form['city']
+        search_key = request.form['search_key']
+        results = scrape_google_local_services(search_key,category,city)
+        return render_template('scraped_data.html', results=results)'''
 @app.route("/scraped", methods=['POST'])
 def scraped():
     if request.method == "POST":
+        city = request.form['city']
         search_key = request.form['search_key']
-        results = scrape_google_local_services(search_key)
+        search_key += " " + city  # Concatenate city name to the search key
+        results = scrape_google_local_services(city, search_key)
         return render_template('scraped_data.html', results=results)
-
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+
