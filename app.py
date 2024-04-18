@@ -21,7 +21,7 @@ def scrape_google_local_services(city,search_key,scrape_page):
 
     time.sleep(2)  # Wait for the results to load
     data = []
-    def scrape_page(unique_entries):
+    def scrape_page():
     # Collect data
         nonlocal data 
         elements = driver.find_elements(By.CSS_SELECTOR, '[class="NwqBmc"]')
@@ -37,12 +37,18 @@ def scrape_google_local_services(city,search_key,scrape_page):
             except Exception as e:
                 print("Error occurred:", e)
 
-    unique_entries = set()
-    scrape_page(unique_entries)
-    button=WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="yDmH0d"]/c-wiz[2]/div/div[3]/div/div/div[1]/div[3]/div[3]/c-wiz/div/div/div[2]/div/div/button')))
-    button.click()
-    time.sleep(2)   
-    scrape_page(unique_entries)
+    
+    scrape_page()
+    while True:   
+        try:
+            button = driver.find_elements(By.XPATH, '//button[@aria-label="Next"]')[1]
+            #driver.execute_script("arguments[0].click();", button)
+            button.click()
+            time.sleep(2)
+            scrape_page()
+        except:
+            break
+    
     driver.quit()  # Quit the driver after scraping
     return data
 
