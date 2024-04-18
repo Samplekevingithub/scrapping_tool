@@ -42,14 +42,13 @@ def scrape_google_local_services(city,search_key,scrape_page):
     while True:   
         try:
             button = driver.find_elements(By.XPATH, '//button[@aria-label="Next"]')[1]
-            #driver.execute_script("arguments[0].click();", button)
             button.click()
             time.sleep(2)
             scrape_page()
         except:
             break
     
-    driver.quit()  # Quit the driver after scraping
+    driver.quit() 
     return data
 
 @app.route('/')
@@ -69,3 +68,8 @@ def scraped():
 if __name__ == '__main__':
     app.run(debug=True)
 
+''' if addresses:
+                    for address in addresses:
+                        address_text = address.text.strip()
+                        if address_text and ", " in address_text:  # Check for the city name
+                            print("Address:", address_text) '''
