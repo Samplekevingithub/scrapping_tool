@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,g
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -6,21 +6,49 @@ import time
 import sqlite3
 
 app = Flask(__name__)
-conn = sqlite3.connect('scraped_data.db')
-cursor = conn.cursor()
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS scraped_data (
-    id INTEGER PRIMARY KEY,
-    name TEXT,
-    rating TEXT,
-    address TEXT,
-    phone TEXT
-)
-''')
-conn.commit()
+DATABASE = 'scraped_data.db'
 
-def scrape_google_local_services(city, search_key, scrape_page):
-    
+# Database connection helper
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+    return db
+
+# Create the database table if not exists
+def init_db():
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS scraped_data (
+                id INTEGER PRIMARY KEY,
+                name TEXT,
+                rating TEXT,
+                address TEXT,
+                phone TEXT
+            )
+        ''')
+        db.commit()
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+
+# Function to insert scraped data into the database
+def insert_data(name, rating, addresses, phones):
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute('''
+        INSERT INTO scraped_data (name, rating, address, phone)
+        VALUES (?, ?, ?, ?)
+    ''', (name, rating, addresses, phones))
+    db.commit()
+
+#def scrape_google_local_services(city,search_key,scrape_page):
+def scrape_and_insert(city, search_key,scrape_page):
     driver = webdriver.Chrome()
 
     # Open the Google Local Services page
@@ -30,6 +58,7 @@ def scrape_google_local_services(city, search_key, scrape_page):
     search_input = driver.find_element(By.CSS_SELECTOR, 'input[class="MDhB7"]')
     search_input.clear()  # Clear any existing text in the search input
     search_input.send_keys(search_key, Keys.ENTER)
+   
 
     time.sleep(2)  # Wait for the results to load
     data = []
@@ -61,17 +90,8 @@ def scrape_google_local_services(city, search_key, scrape_page):
             break
  
     driver.quit() 
-
-    #Store scraped data in the database
-    for result in data:
-        cursor.execute('''
-        INSERT INTO scraped_data (name, rating, address, phone)
-        VALUES (?, ?, ?, ?)
-        ''', (result['name'], result['rating'], result['address'], result['phone']))
-    conn.commit()
-
     return data
-
+    
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -83,14 +103,21 @@ def scraped():
         search_key = request.form['search_key']
         scrape_page = request.form.get('scrape_page')
         search_key += " " + city  # Concatenate city name to the search key
-        results = scrape_google_local_services(city, search_key, scrape_page)
-        return render_template('scraped_data.html', results=results)
+        #scrape_and_insert(city, search_key, scrape_page)
+        results = scrape_and_insert(city, search_key, scrape_page)
+        #results = scrape_google_local_services(city, search_key,scrape_page)
+        return render_template('scraped_data.html', results=get_data())
 
 
-def display():
+# Function to retrieve data from the database
+def get_data():
+    db = get_db()
+    cursor = db.cursor()
     cursor.execute('SELECT * FROM scraped_data')
-    results = cursor.fetchall()
-    return  results
+    return cursor.fetchall()
+
+# Initialize the database when the app starts
+init_db()
 
 if __name__ == '__main__':
     app.run(debug=True)
@@ -98,19 +125,19 @@ if __name__ == '__main__':
 
 
 
-  # addresses = element.find_element(By.XPATH, './/span[2][contains(@class, "hGz87c")]').text.strip()
-                # if addresses:
-                #      for address in addresses.split(", "): 
-                #          print("Address:", address)
-                # item['addresses'] = addresses if ", " in addresses else "" 
 
 
 
 
+'''from flask import Flask, render_template, request,g
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
+import sqlite3
 
-
-
-'''def scrape_google_local_services(city,search_key,scrape_page):
+app = Flask(__name__)
+def scrape_google_local_services(city,search_key,scrape_page):
     driver = webdriver.Chrome()
 
     # Open the Google Local Services page
@@ -167,19 +194,9 @@ def scraped():
         results = scrape_google_local_services(city, search_key,scrape_page)
         return render_template('scraped_data.html', results=results)
 
-    '''
 
-
-
-
-
-
-
-
-
-
-
-
+if __name__ == '__main__':
+    app.run(debug=True)'''
 
 
 
