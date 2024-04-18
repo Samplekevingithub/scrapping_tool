@@ -37,7 +37,7 @@ def scrape_google_local_services(city,search_key,scrape_page):
             except Exception as e:
                 print("Error occurred:", e)
 
-    
+
     scrape_page()
     while True:   
         try:
@@ -68,8 +68,35 @@ def scraped():
 if __name__ == '__main__':
     app.run(debug=True)
 
-''' if addresses:
-                    for address in addresses:
-                        address_text = address.text.strip()
-                        if address_text and ", " in address_text:  # Check for the city name
-                            print("Address:", address_text) '''
+'''Name: Gold Star Refrigeration Service
+Rating: 4.8
+Address: 15+ years in business
+Address: Surat, Gujarat
+Phone: 099258 90932
+
+Name: jariwala care home service
+Rating: 4.5
+Address: 093279 78075
+
+Name: The Repairing Company
+Rating: 4.9
+Address: Surat, Gujarat
+Phone: 099093 69569
+
+Name: Star-Win Enterprise
+Rating: 4.8
+Address: 10+ years in business
+Address: Surat, Gujarat
+Phone: 098246 11124
+
+Name: Jay khodiyar refrigeration
+Rating: 4.8
+Address: Surat, Gujarat
+Phone: 098241 11124
+
+Name: URJA CARE (Microwave Oven Servicing & Repairing)
+Rating: 4.9
+Address: 10+ years in business
+Address: Surat, Gujarat
+Phone: 094271 52339
+'''
