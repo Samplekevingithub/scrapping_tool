@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Scrapping</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+</head>
+<body>
+     
+
+      
+    <form class="form-container" >
+     <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="0">--Please choose an category--</option>
+            <option value="ICAT DILOAT Dadicat Company">ICAT DILOAT Dadicat Company</option>
+            <option value="Digital Marketing [DMAI PVT LTD] | Digital Marketing Agency">Digital Marketing [DMAI PVT LTD] | Digital Marketing Agency</option>
+            <option value="Frameinn | Marketing & Advertising Agency">Frameinn | Marketing & Advertising Agency</option>
+            <option value="Digital marketing course in Surat - Digital Khichdi">Digital marketing course in Surat - Digital Khichdi</option>
+            <option value="Sunlight Digital Tech">Sunlight Digital Tech</option>
+            <option value="Techzy Studio">Techzy Studio</option>
+            <option value="JS Digital Marketing ">JS Digital Marketing </option>
+            <option value="RV E-Marketing">RV E-Marketing</option>
+            <option value="Digital Famous ">Digital Famous </option>
+            <option value="Rainbow Digital Marketing">Rainbow Digital Marketing</option>
+
+        </select><br><br>
+        
+
+
+        <label for="city">City:</label>
+        <select id="city" name="city">
+            <option value="0">--Please choose an city--</option>
+            <option value="Surat">Surat</option>
+            <option value="Bhuj">Bhuj</option>
+            <option value="Nvsari">Nvsari</option>
+        </select><br><br>
+
+        <label for="state">State:</label>
+        <select id="state" name="state">
+            <option value="0">--Please choose an state--</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi">Delhi</option>
+            
+        </select><br><br>
+
+        <label for="rating">Rating:</label>
+        <div id="rating-container" class="rating-container">
+          
+            <span class="rating" data-value="1">★</span>
+            <span class="rating" data-value="2">★</span>
+            <span class="rating" data-value="3">★</span>
+            <span class="rating" data-value="4">★</span>
+            <span class="rating" data-value="5">★</span>
+          </div>
+
+         
+          <table id="ratings-table" >
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Rate</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rating in ratings %}
+                <tr >
+                        <td>{{ rating.name }}</td>
+                        <td>{{ rating.rate }}</td>
+                        <td>{{ rating.address }}</td>
+                        <td>{{ rating.phone }}</td>
+                    </tr>
+                {% endfor %}
+               
+            </tbody>
+            </table>
+            <div class="submit-button-container">
+                <input type="submit" value="Submit"  >  
+              </div>
+
+
+<!--this is a rating jquery--> 
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+            var current_min_rating = 0;
+            var current_max_rating = 5;
+        
+            // Function to filter the ratings table
+              function filterRatings() {
+                var selectedCity = $('#city').val(); // Get the selected city
+                var selectedState = $('#state').val(); // Get the selected state
+                
+                $('#ratings-table tbody tr').hide();
+                $('#ratings-table tbody tr[data-rate]').each(function() {
+                    var data_rate = parseInt($(this).data('rate'));
+                    var address = $(this).find('td:eq(2)').text(); 
+                    
+                    if (data_rate >= current_min_rating && data_rate <= current_max_rating &&
+                        address.includes(selectedCity) && address.includes(selectedState) )  {
+                        $(this).show();
+                    }
+                    });
+            }
+                
+
+            // Event listener for rating selection
+            $('.rating').click(function() {
+                $('.rating.selected').removeClass('selected');
+                $(this).addClass('selected');
+                current_min_rating = parseInt($(this).data('value'));
+                current_max_rating = current_min_rating;
+                filterRatings();
+            });
+
+
+            $('input[type="submit"]').click(function(e) {
+                            e.preventDefault();
+                            var selectedCategory = $('#category').val();
+                                $('#ratings-table tbody tr').hide();
+                                $('#ratings-table tbody tr[data-rate]').each(function(){
+                                    var data_rate = parseInt($(this).data('rate'));
+                                    var name = $(this).find('td:eq(0)').text();
+                                    if (name.includes(selectedCategory) )  {
+                                    $(this).show();
+                                }  
+                                            })
+                                $('#ratings-table').show();
+                            // Show the ratings table if ratings were filtered
+                            if (current_min_rating > 0) {
+                                filterRatings();
+                                $('#ratings-table').show();
+                            }
+                        });
+            
+                
+                });
+
+         </script> 
+    
+         </script>
+      
+ 
+          <script src="{{url_for('static',filename='js/script.js')}}">
+        </script>
+    </form>
+</body>
+</html>

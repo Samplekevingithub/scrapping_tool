@@ -80,10 +80,25 @@ def scrape_google_local_services(city, search_key, scrape_page):
 
     driver.quit()
     return data
+@app.route('/home')
+def home():
+            
+        if not Rating.query.first():
+            for rating in ratings:
+                new_rating = Rating(name=rating['name'], rate=rating['rating'],address=rating['address'],phone=rating['phone'],description=rating['description'])
+                db.session.add(new_rating)
+            db.session.commit()
+        ratings=Rating.query.all()
+        current_min_rating = 0
+        current_max_rating = 5
+        
+        return render_template('home.html' ,ratings=ratings, current_min_rating=current_min_rating, current_max_rating=current_max_rating)
+    
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route("/scraped", methods=['POST'])
 def scraped():
@@ -174,12 +189,37 @@ def scraped():
 if __name__ == '__main__':
     app.run(debug=True)'''
 
+'''from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scraped_data.db'
+db = SQLAlchemy(app)
+
+class Rating(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    rating = db.Column(db.String(10))
+    address = db.Column(db.String(255))
+    phone = db.Column(db.String(20))
+
+    
+  def insert_data(data):
+    for item in data:
+        new_rating = Rating(name=item['name'], rating=item['rating'], address=item['addresses'], phone=item['phones'])
+        db.session.add(new_rating)
+    db.session.commit()
 
 
-
-
-
-
-
-
-
+@app.route('/home')
+def home():
+    if not Rating.query.first():
+        for rating in ratings:
+            new_rating = Rating(name=rating['name'], rating=rating['rating'], address=rating['address'], phone=rating['phone'])
+            db.session.add(new_rating)
+        db.session.commit()
+    ratings = Rating.query.all()
+    current_min_rating = 0
+    current_max_rating = 5
+    return render_template('home.html', ratings=ratings, current_min_rating=current_min_rating, current_max_rating=current_max_rating)
+  
+    '''

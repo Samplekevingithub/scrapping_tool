@@ -1,0 +1,128 @@
+/* styles.css */
+body {
+  font-family: Arial, sans-serif;
+}
+
+#selected-category {
+  color: blue;
+}
+
+.form-container {
+    width: 30%;
+    margin:  auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-container label,
+.form-container input,
+.form-container select {
+    padding: 5px;
+    margin-bottom: 8px;
+}
+
+.rating-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .rating {
+    color: #ccc;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+  }
+
+.rating.selected {
+    color: yellow;
+  }
+
+#ratings-table {
+    display: none;
+}
+
+.rating:not(.selected) {
+  opacity: 0.3;
+}
+  .input-field {
+    font-size: 1.2rem;
+    padding: 6px 10px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+.form-container select#location {
+  
+    width: 100%;
+    padding: 5px;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+  }
+
+
+.form-container select {
+    padding-right: 3em;
+    margin-bottom: 5px;
+}
+
+.form-container .submit-button {
+    align-self: center;
+    padding: 10px;
+    margin-top: 12px;
+    border-radius: 5px;
+    border: none;
+    background-color: lightblue;
+    cursor: pointer;
+}
+
+.form-container .submit-button:hover {
+    background-color: #17A2B8;
+}
+
+.form-container .submit-button:focus {
+    outline: none;
+}
+
+
+
+#ratings-table {
+  border-collapse: collapse;
+  width: 200%;
+}
+
+#ratings-table th, #ratings-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#ratings-table th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#ratings-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#ratings-table tr:hover {
+  background-color: #ddd;
+}
+
+#rating-container {
+  margin-bottom: 20px;
+}
+
+.rating {
+  cursor: pointer;
+}
+
+.rating.selected {
+  color: #ff6347;
+}
+
+.submit-button-container {
+  margin-top: 8px; /* Adjust this value to your desired margin size */
+}
