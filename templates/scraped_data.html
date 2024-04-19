@@ -53,12 +53,14 @@
         </thead>
         <tbody>
             {% for result in results %}
-            <tr>
-                <td>{{ result[0] }}</td>
-                <td>{{ result[1] }}</td>
-                <td>{{ result[2] }}</td>
-                <td>{{ result[3] }}</td>
-            </tr>
+                {% if result[0] and result[1] and result[2] and result[3] %}
+                    <tr>
+                        <td>{{ result[0] }}</td>
+                        <td>{{ result[1] }}</td>
+                        <td>{{ result[2] }}</td>
+                        <td>{{ result[3] }}</td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>
