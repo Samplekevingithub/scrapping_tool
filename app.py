@@ -4,8 +4,18 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
 import sqlite3
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scraped_data.db'
+db = SQLAlchemy(app)
+
+class Rating(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    rating = db.Column(db.String(10))
+    address = db.Column(db.String(255))
+    phone = db.Column(db.String(20))
 
 # Function to create SQLite database table
 def create_table():
@@ -16,14 +26,21 @@ def create_table():
     conn.commit()
     conn.close()
 
-# Function to insert data into SQLite database
+ # Function to insert data into SQLite database
 def insert_data(data):
-    conn = sqlite3.connect('scraped_data.db')
-    c = conn.cursor()
+     conn = sqlite3.connect('scraped_data.db')
+     c = conn.cursor()
+     for item in data:
+         c.execute("INSERT INTO scraped_data VALUES (?, ?, ?, ?)", (item['name'], item['rating'], item['addresses'], item['phones']))
+     conn.commit()
+     conn.close()
+  
+def insert_data(data):
     for item in data:
-        c.execute("INSERT INTO scraped_data VALUES (?, ?, ?, ?)", (item['name'], item['rating'], item['addresses'], item['phones']))
-    conn.commit()
-    conn.close()
+        new_rating = Rating(name=item['name'], rating=item['rating'], address=item['addresses'], phone=item['phones'])
+        db.session.add(new_rating)
+    db.session.commit()
+
 
 def fetch_data():
     conn = sqlite3.connect('scraped_data.db')
@@ -85,7 +102,7 @@ def home():
             
         if not Rating.query.first():
             for rating in ratings:
-                new_rating = Rating(name=rating['name'], rate=rating['rating'],address=rating['address'],phone=rating['phone'],description=rating['description'])
+                new_rating = Rating(name=rating['name'], rate=rating['rating'],address=rating['address'],phone=rating['phone'])
                 db.session.add(new_rating)
             db.session.commit()
         ratings=Rating.query.all()
@@ -107,6 +124,7 @@ def scraped():
         search_key = request.form['search_key']
         scrape_page = request.form.get('scrape_page')
         search_key += " " + city  # Concatenate city name to the search key
+        # results = scrape_google_local_services(city, search_key, scrape_page)
         scrape_google_local_services(city, search_key, scrape_page)
         results = fetch_data()
         return render_template('scraped_data.html', results=results)
@@ -128,6 +146,32 @@ import time
 import sqlite3
 
 app = Flask(__name__)
+# Function to create SQLite database table
+def create_table():
+    conn = sqlite3.connect('scraped_data.db')
+    c = conn.cursor()
+     c.execute(CREATE TABLE IF NOT EXISTS scraped_data
+                  (name TEXT, rating TEXT, address TEXT, phone TEXT))
+    conn.commit()
+    conn.close()
+
+ # Function to insert data into SQLite database
+def insert_data(data):
+     conn = sqlite3.connect('scraped_data.db')
+     c = conn.cursor()
+     for item in data:
+         c.execute("INSERT INTO scraped_data VALUES (?, ?, ?, ?)", (item['name'], item['rating'], item['addresses'], item['phones']))
+     conn.commit()
+     conn.close()
+
+def fetch_data():
+    conn = sqlite3.connect('scraped_data.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM scraped_data")
+    data = c.fetchall()
+    conn.close()
+    return data
+
 def scrape_google_local_services(city,search_key,scrape_page):
     driver = webdriver.Chrome()
 
@@ -167,7 +211,7 @@ def scrape_google_local_services(city,search_key,scrape_page):
             scrape_page()
         except:
             break
- 
+    insert_data(data)
     driver.quit() 
     return data
     
@@ -182,44 +226,11 @@ def scraped():
         search_key = request.form['search_key']
         scrape_page = request.form.get('scrape_page')
         search_key += " " + city  # Concatenate city name to the search key
-        results = scrape_google_local_services(city, search_key,scrape_page)
+        # results = scrape_google_local_services(city, search_key, scrape_page)
+        scrape_google_local_services(city, search_key, scrape_page)
+        results = fetch_data()
         return render_template('scraped_data.html', results=results)
 
 
 if __name__ == '__main__':
     app.run(debug=True)'''
-
-'''from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scraped_data.db'
-db = SQLAlchemy(app)
-
-class Rating(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255))
-    rating = db.Column(db.String(10))
-    address = db.Column(db.String(255))
-    phone = db.Column(db.String(20))
-
-    
-  def insert_data(data):
-    for item in data:
-        new_rating = Rating(name=item['name'], rating=item['rating'], address=item['addresses'], phone=item['phones'])
-        db.session.add(new_rating)
-    db.session.commit()
-
-
-@app.route('/home')
-def home():
-    if not Rating.query.first():
-        for rating in ratings:
-            new_rating = Rating(name=rating['name'], rating=rating['rating'], address=rating['address'], phone=rating['phone'])
-            db.session.add(new_rating)
-        db.session.commit()
-    ratings = Rating.query.all()
-    current_min_rating = 0
-    current_max_rating = 5
-    return render_template('home.html', ratings=ratings, current_min_rating=current_min_rating, current_max_rating=current_max_rating)
-  
-    '''
