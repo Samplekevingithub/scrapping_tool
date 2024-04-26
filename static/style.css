@@ -1,105 +1,113 @@
 /* styles.css */
 body {
   font-family: Arial, sans-serif;
-}
-
-#selected-category {
-  color: blue;
+  background-color: #f8f9fa; /* Light background color */
 }
 
 .form-container {
-    width: 30%;
-    margin:  auto;
-    display: flex;
-    flex-direction: column;
+  width: 98%; /* Increased width for better visibility */
+  margin: auto;
+  padding: 20px; /* Added padding for spacing */
+  background-color: #fff; /* White background for form */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
 }
 
-.form-container label,
-.form-container input,
-.form-container select {
-    padding: 5px;
-    margin-bottom: 8px;
+.form-group {
+  margin-bottom: 20px; /* Increased margin for spacing */
+}
+
+.form-group label,
+.form-group select {
+  display: block; /* Labels and selects on separate lines */
+  margin-bottom: 8px; /* Space between label and select */
+  font-size: 18px; /* Larger font size for better readability */
+  color: #333; /* Text color */
+}
+
+#category {
+  width: 49%; /* Full width for the dropdown */
+  padding: 10px; /* Add padding */
+  border: 1px solid #ccc; /* Add border */
+  border-radius: 5px; /* Add border radius */
+  margin-bottom: 20px; /* Add spacing below the dropdown */
+}
+
+.country-city-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to next line */
+  margin-top: 20px; /* Add margin at the top */
+}
+
+.country-city-container .form-group {
+  flex-basis: calc(50% - 10px); /* Each form group takes up half of the container width with some margin */
+}
+
+.country-city-container .form-group select {
+  width: 100%; /* Full width for selects */
+  padding: 10px; /* Add padding */
+  border: 1px solid #ccc; /* Add border */
+  border-radius: 5px; /* Add border radius */
+}
+
+/* Apply CSS to the label element */
+label[for="category"],
+label[for="country"],
+label[for="city"] {
+  font-weight: bold; /* Make the text bold */
+  display: block; /* Ensure label is displayed as block */
+  margin-bottom: 8px; /* Add spacing below the label */
+}
+
+
+/* Apply CSS to the option element */
+option[value="0"] {
+  font-weight: bold;
+  text-align: center; 
+  color: #333; 
+}
+
+/* Add space between country and city dropdowns */
+.country-city-container .form-group:nth-child(odd) {
+  margin-right: 5px; 
+}
+.country-city-container .form-group:nth-child(even) {
+  margin-left: 5px; 
 }
 
 .rating-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 16px;
-  }
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
 
-  .rating {
-    color: #ccc;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: color 0.3s ease-in-out;
-  }
+.rating {
+  font-weight: bold; 
+  color: #961b1b;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+  text-align: center;
+}
 
 .rating.selected {
-    color: yellow;
-  }
+  color: yellow;
+}
 
 #ratings-table {
-    display: none;
-}
-
-.rating:not(.selected) {
-  opacity: 0.3;
-}
-  .input-field {
-    font-size: 1.2rem;
-    padding: 6px 10px;
-    margin: 0 auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-
-.form-container select#location {
-  
-    width: 100%;
-    padding: 5px;
-    border: 1px solid lightgray;
-    border-radius: 4px;
-  }
-
-
-.form-container select {
-    padding-right: 3em;
-    margin-bottom: 5px;
-}
-
-.form-container .submit-button {
-    align-self: center;
-    padding: 10px;
-    margin-top: 12px;
-    border-radius: 5px;
-    border: none;
-    background-color: lightblue;
-    cursor: pointer;
-}
-
-.form-container .submit-button:hover {
-    background-color: #17A2B8;
-}
-
-.form-container .submit-button:focus {
-    outline: none;
-}
-
-
-
-#ratings-table {
+  display: none; 
+  width: 100%; /* Adjusted width for better display */
   border-collapse: collapse;
-  width: 200%;
 }
 
-#ratings-table th, #ratings-table td {
+#ratings-table th,
+#ratings-table td {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
 #ratings-table th {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -111,18 +119,38 @@ body {
   background-color: #ddd;
 }
 
-#rating-container {
-  margin-bottom: 20px;
+.submit-button-container {
+  text-align: center; /* Center align submit button */
+  margin-top: 24px;
+  
 }
 
-.rating {
+.form-container select#location,
+.form-container select {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+}
+
+.submit-button {
+  align-self: center;
+  padding: 10px;
+  margin-top: 12px;
+  border-radius: 5px;
+  border: none;
+  background-color: lightblue;
   cursor: pointer;
 }
 
-.rating.selected {
-  color: #ff6347;
+.submit-button:hover {
+  background-color: #17a2b8;
 }
 
-.submit-button-container {
-  margin-top: 8px; /* Adjust this value to your desired margin size */
+.submit-button:focus {
+  outline: none;
+}
+
+.rating:not(.selected) {
+  opacity: 0.3;
 }
