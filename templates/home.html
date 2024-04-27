@@ -1579,36 +1579,60 @@
 
         </script>
 
-        <table id="ratings-table">
+        <!-- <table id="ratings-table">
             <thead>
                 <tr>
+                    <th>Image</th>
                     <th>Name</th>
                     <th>Rate</th>
                     <th>Address</th>
                     <th>Phone</th>
                     <th>Category</th>
-                    <th>Image</th>
+                    
                 </tr>
             </thead>
   
             <tbody>
                 {% for rating in ratings %}
                 <tr data-rate="{{ rating.rating }}">
+                    <td><img src="{{ rating['image'] }}" alt="Image" style="max-width: 100px;"></td>
                     <td>{{ rating.name }}</td>
                     <td>{{ rating.rating }}</td>
                     <td>{{ rating.address }}</td>
                     <td>{{ rating.phone }}</td>
                     <td>{{ rating.category }}</td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table> -->
+    
+        <table id="ratings-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+        
+            <tbody>
+                {% for rating in ratings %}
+                <tr data-rate="{{ rating.rating }}">
                     <td><img src="{{ rating['image'] }}" alt="Image" style="max-width: 100px;"></td>
+                    <td>
+                        <strong>Name:</strong> {{ rating.name }}
+                        <br>
+                        <strong>Rate:</strong> {{ rating.rating }}
+                        <br>
+                        <strong>Address:</strong> {{ rating.address }}
+                        <br>
+                        <strong>Phone:</strong> {{ rating.phone }}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <!-- <div class="submit-button-container">
-            <input type="submit" value="Submit">
-        </div> -->
 
-<!--this is a rating jquery-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Loader HTML -->
@@ -1646,19 +1670,20 @@ $(document).ready(function () {
                             // Check if rating is within the selected range
                             if (parseFloat(rating.rating) >= minRating && parseFloat(rating.rating) <= maxRating) {
                                 var row = '<tr data-rate="' + rating.rating + '">';
-                                row += '<td>' + rating.name + '</td>';
-                                row += '<td>' + rating.rating + '</td>';
-                                row += '<td>' + rating.addresses + '</td>';
-                                row += '<td>' + rating.phones + '</td>';
-                                row += '<td>' + rating.category + '</td>';
-                                if (rating['image']) {
-                                    row += '<td><img src="' + rating['image'] + '" alt="' + rating.name + '"></td>';
-                                } else {
-                                    row += '<td>No Image Available</td>';
+                                    if (rating['image']) {
+                                        row += '<td><img src="' + rating['image'] + '" alt="' + rating.name + '" style="max-width: 100px;"></td>';
+                                    } else {
+                                        row += '<td>No Image Available</td>';
+                                    }
+                                    row += '<td>' +
+                                        '<strong>Name:</strong> ' + rating.name + '<br>' +
+                                        '<strong>Rate:</strong> ' + rating.rating + '<br>' +
+                                        '<strong>Address:</strong> ' + rating.addresses + '<br>' +
+                                        '<strong>Phone:</strong> ' + rating.phones +
+                                        '</td>';
+                                    row += '</tr>';
+                                    $('#ratings-table tbody').append(row);
                                 }
-                                row += '</tr>';
-                                $('#ratings-table tbody').append(row);
-                            }
                         }
                     });
                     $('#ratings-table').show(); // Show the table after updating rows

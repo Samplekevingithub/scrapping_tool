@@ -95,20 +95,27 @@ option[value="0"] {
 }
 
 #ratings-table {
-  display: none; 
-  width: 100%; /* Adjusted width for better display */
+  display: none;
+  width: 50%;
+  margin: 0 auto; /* Center align the table */
   border-collapse: collapse;
 }
 
 #ratings-table th,
 #ratings-table td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px;
 }
 
 #ratings-table th {
   background-color: #4caf50;
   color: white;
+  font-weight: bold;
+  text-align: left;
+}
+
+#ratings-table tbody td {
+  font-size: 16px;
 }
 
 #ratings-table tr:nth-child(even) {
@@ -118,6 +125,8 @@ option[value="0"] {
 #ratings-table tr:hover {
   background-color: #ddd;
 }
+
+
 
 .submit-button-container {
   text-align: center; /* Center align submit button */
