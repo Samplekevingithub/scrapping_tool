@@ -17,6 +17,7 @@ class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     rating = db.Column(db.String(10))
+    count = db. Column(db.String(1000))
     address = db.Column(db.String(255))
     phone = db.Column(db.String(20))
     category = db.Column(db.String(20))
@@ -29,7 +30,7 @@ def create_table():
 # Function to insert data into the database
 def insert_data(data):
     for item in data:
-        new_rating = Rating( name=item['name'], rating=item['rating'], address=item['addresses'], phone=item['phones'], category=item['category'], image=item['image'])
+        new_rating = Rating( name=item['name'], rating=item['rating'], count=item['count'], address=item['addresses'], phone=item['phones'], category=item['category'], image=item['image'])
         db.session.add(new_rating)
     db.session.commit()
 
@@ -69,6 +70,7 @@ def scrape_google_local_services( category,country,city, search_key):
                 driver.execute_script("arguments[0].scrollIntoView();", element)
                 item['name'] = element.find_element(By.CSS_SELECTOR, '.rgnuSb').text.strip()
                 item['rating'] = element.find_element(By.CSS_SELECTOR, '.OJbIQb').text
+                item['count'] = element.find_element(By.CLASS_NAME,'leIgTe').text
                 item['addresses'] = element.find_element(By.XPATH, '//*[@id="yDmH0d"]/c-wiz[2]/div/div[3]/div/div/div[1]/div[3]/div[3]/c-wiz/div/div/div[1]/c-wiz/div/div[1]/div[1]/div/div/div/div[2]/div[3]/span[2]/span').text.strip()
                 item['phones'] = element.find_element(By.XPATH, './/span[3][contains(@class, "hGz87c")]').text
                 item['category'] = element.find_element(By.XPATH, './/span[contains(@class, "hGz87c")]').text.strip()

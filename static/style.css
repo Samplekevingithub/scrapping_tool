@@ -95,11 +95,14 @@ option[value="0"] {
 }
 
 #ratings-table {
-  display: none;
+  display: none; 
   width: 50%;
   margin: 0 auto; /* Center align the table */
   border-collapse: collapse;
+  vertical-align: top;
+  margin-right: 5px;
 }
+
 
 #ratings-table th,
 #ratings-table td {

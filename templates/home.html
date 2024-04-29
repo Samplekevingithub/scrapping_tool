@@ -1622,7 +1622,7 @@
                     <td>
                         <strong>Name:</strong> {{ rating.name }}
                         <br>
-                        <strong>Rate:</strong> {{ rating.rating }}
+                        <strong>Rate:</strong> {{ rating.rating }} {{ rating.count }}
                         <br>
                         <strong>Address:</strong> {{ rating.address }}
                         <br>
@@ -1677,13 +1677,16 @@ $(document).ready(function () {
                                     }
                                     row += '<td>' +
                                         '<strong>Name:</strong> ' + rating.name + '<br>' +
-                                        '<strong>Rate:</strong> ' + rating.rating + '<br>' +
+                                        '<strong>Rate:</strong> ' + rating.rating + ' ' + rating.count + '<br>' +
+                                        // '<strong>Count:</strong> ' + rating.count + '<br>' +
                                         '<strong>Address:</strong> ' + rating.addresses + '<br>' +
                                         '<strong>Phone:</strong> ' + rating.phones +
                                         '</td>';
                                     row += '</tr>';
                                     $('#ratings-table tbody').append(row);
                                 }
+
+
                         }
                     });
                     $('#ratings-table').show(); // Show the table after updating rows
