@@ -1627,6 +1627,8 @@
                         <strong>Address:</strong> {{ rating.address }}
                         <br>
                         <strong>Phone:</strong> {{ rating.phone }}
+                        <br>
+                        <strong>Location:</strong> {{ rating.location }}
                     </td>
                 </tr>
                 {% endfor %}
@@ -1680,7 +1682,8 @@ $(document).ready(function () {
                                         '<strong>Rate:</strong> ' + rating.rating + ' ' + rating.count + '<br>' +
                                         // '<strong>Count:</strong> ' + rating.count + '<br>' +
                                         '<strong>Address:</strong> ' + rating.addresses + '<br>' +
-                                        '<strong>Phone:</strong> ' + rating.phones +
+                                        '<strong>Phone:</strong> ' + rating.phones + '<br>' +
+                                        '<strong>Location:</strong> ' + rating.location +
                                         '</td>';
                                     row += '</tr>';
                                     $('#ratings-table tbody').append(row);
@@ -1722,7 +1725,6 @@ $(document).ready(function () {
     });
 });
 </script>
-
 
 <script src="{{url_for('static',filename='js/script.js')}}">
 </script>

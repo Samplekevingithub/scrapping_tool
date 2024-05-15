@@ -21,7 +21,9 @@ class Rating(db.Model):
     address = db.Column(db.String(255))
     phone = db.Column(db.String(20))
     category = db.Column(db.String(20))
+    location = db.Column(db.String(255))  # Add location field
     image = db.Column(db.String(255))
+    
 
 # Function to create the database table
 def create_table():
@@ -30,9 +32,10 @@ def create_table():
 # Function to insert data into the database
 def insert_data(data):
     for item in data:
-        new_rating = Rating( name=item['name'], rating=item['rating'], count=item['count'], address=item['addresses'], phone=item['phones'], category=item['category'], image=item['image'])
+        new_rating = Rating( name=item['name'], rating=item['rating'], count=item['count'], address=item['addresses'], phone=item['phones'], category=item['category'], location=item['location'],image=item['image'])
         db.session.add(new_rating)
     db.session.commit()
+
 
 # Function to fetch data from the database
 def fetch_data():
@@ -75,11 +78,14 @@ def scrape_google_local_services( category,country,city, search_key):
                 item['phones'] = element.find_element(By.XPATH, './/span[3][contains(@class, "hGz87c")]').text
                 item['category'] = element.find_element(By.XPATH, './/span[contains(@class, "hGz87c")]').text.strip()
                 item['image'] = element.find_element(By.CLASS_NAME, 'Fy57pd').get_attribute("src")
-                display(Image(url='image'))
+                display(Image(url=item['image']))
+                item['location'] = element.find_element(By.XPATH, './/a[@aria-label="Directions"]').get_attribute("href")(url=item['location'])
+                
+
                 data.append(item)
             except Exception as e:
                 print("Error occurred:", e)
-
+#
     scrape_page()
     while True:   
         try:
@@ -95,26 +101,7 @@ def scrape_google_local_services( category,country,city, search_key):
     driver.quit()
     return data
 
-# @app.route('/home', methods=['GET', 'POST'])
-# def home():
-#     if request.method == 'POST':
-#         category = request.form['category']
-#         country = request.form['country']
-#         city = request.form['city']
 
-#         # Check if data exists in the database
-#         ratings = fetch_data()
-#         if not ratings:
-#             # If data doesn't exist, scrape and store it
-#             search_key = category + " " + country + " " + city
-#             results = scrape_google_local_services(category, country, city, search_key)
-#             ratings = fetch_data()
-        
-#         return render_template('home.html', ratings=ratings)
-#     else:
-#         # Fetch all ratings from the database
-#         ratings = fetch_data()              
-#         return render_template('home.html', ratings=ratings)
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
@@ -155,97 +142,114 @@ def index():
      return render_template('index.html')
 
 
-# @app.route("/scraped", methods=['POST'])
-# def scraped():
-#     if request.method == "POST":
-#         city = request.form['city']
-#         search_key = request.form['search_key']
-#         search_key += " " + city  # Concatenate city name to the search key
-#         results = scrape_google_local_services(city, search_key)
-#         return render_template('scraped_data.html', results=results)
-
 if __name__ == '__main__':
     with app.app_context():
         create_table()  # Create the table when the script is run
         app.run(debug=True)
+'''
+from fastapi import FastAPI
+import graphene
+from pydantic import BaseModel
+from sqlalchemy import create_engine,Column, Integer, String, Date
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from graphene_sqlalchemy import SQLAlchemyObjectType
+from graphene import ObjectType, Field, String, ID, Int
+from starlette.graphql import GraphQLApp
+app=FastAPI()
+SQLALCHEMY_DATABASE_URL = "sqlite:///./books.db"
+engine=create_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
 
-'''from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-import time
-from IPython.display import display, Image
-import re
-driver = webdriver.Chrome()
+class Book(Base):
+    __tablename__ = "books"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    author = Column(String, index=True)
+    published_date = Column(Date)
+    isbn = Column(String, index=True)
+    num_pages = Column(Integer)
+    cover_image_url = Column(String, nullable=True)
 
-driver.get('https://www.google.com/localservices/prolist?g2lbs=AIQllVzWSYspFtzaywPV9jv6ozuwdPjt7hfraOfChGkHnMWRs6jF0EN0JnmLVAxCXczEjUzv4oHOVvTL6BdV-38uYjJ1IChxr0ZEAtiL7qHihksvHmIrYX9YXjZaRJZM3RoWbXTEIRAz&hl=en-IN&gl=in&ssta=1&q=digital%20marketing%20agency&oq=digital%20marketing%20agency&slp=MgA6HENoTUlwNk9mdTl6a2hBTVZCUS1EQXgzU1FBV19SAggCYACSAbgCCg0vZy8xMWg1N2sxNTMxCg0vZy8xMWJ3NjlyemhwCg0vZy8xMXFwbTVoY2YyCg0vZy8xMWprNHZ2NXQ1Cg0vZy8xMXM2MXN3ZDg3Cg0vZy8xMXZqaG1tbGZtCg0vZy8xMWZzdm01XzF5Cg0vZy8xMWxjZnE0eV9yCg0vZy8xMWtqajcycnQzCg0vZy8xMXJzYnIzcnc5Cg0vZy8xMWozNDQ4OHE4Cg0vZy8xMXNzd3BzZnAzCg0vZy8xMWYzam15M2puCg0vZy8xMWhmNHJfcThyCg0vZy8xMW4xNTB6aHNoCg0vZy8xMWM2N3dtOHRmCg0vZy8xMWRkeGJ6cmNsCg0vZy8xMWg0X2xzMHc0Cg0vZy8xMWoyZnA0bWIyCg0vZy8xMXY1eDM0OGpzEgQSAggBEgQKAggBmgEGCgIXGRAA&src=2&serdesk=1&sa=X&ved=2ahUKEwiurZS73OSEAxX91TgGHYHWCWYQjGp6BAgiEAE&scp=ChVnY2lkOm1hcmtldGluZ19hZ2VuY3kSVxISCRcp3KaMReA7EXyOXMDrZ7gEGhIJYxUdQVlO4DsRQrA4CSlYRf4iFVN1cmF0LCBHdWphcmF0IDM5NTAwNioUDfIgoAwVUZVqKx3Upq4MJZ0nfiswARoYZGlnaXRhbCBtYXJrZXRpbmcgYWdlbmN5IhhkaWdpdGFsIG1hcmtldGluZyBhZ2VuY3kqEE1hcmtldGluZyBhZ2VuY3k%3D')  
+Base.metadata.create_all(bind=engine)
 
-search_input = driver.find_element(By.CSS_SELECTOR,'input[class="MDhB7"]')
-search_input.clear()
-search_input.send_keys("Electrician", Keys.ENTER)
+class BookModel(BaseModel):
+    title: str
+    author: str
+    published_date: str
+    isbn: str
+    num_pages: int
+    cover_image_url: str = None
 
-time.sleep(2)
-def scrape_page(unique_entries):
-    # data = driver.find_elements(By.CLASS_NAME, 'DVBRsc')
-    data = driver.find_elements(By.XPATH,'//*[@jscontroller="xkZ6Lb"]')
-    for element in data:
-        try:
-            driver.execute_script("arguments[0].scrollIntoView();", element)
-            images = element.find_element(By.CLASS_NAME, 'Fy57pd').get_attribute("src")
-            name = element.find_element(By.CSS_SELECTOR, '.rgnuSb').text.strip()
-            rating = element.find_element(By.CSS_SELECTOR, '.OJbIQb').text
-            count = element.find_element(By.CLASS_NAME,'leIgTe').text
-            addresses = element.find_elements(By.XPATH, './/span[2][contains(@class, "hGz87c")]')
-            phones = element.find_elements(By.XPATH, './/span[3][contains(@class, "hGz87c")]')
-            location = element.find_element(By.XPATH, './/a[@role="link"]').get_attribute("href")
-      
-            #image = images.get_attribute("src")
-            
-            if name and rating:
-                display(Image(url=images))  # Display the image directly
-                print("Name:", name)
-                print("Rating:", rating, count)
-                            
-        
-                if addresses:
-                    for address in addresses:
-                        address_text = address.text.strip()
-                        if address_text:
-                            print("Address:", address_text)
-            
-                if phones:
-                    for phone in phones:
-                        phone_text = phone.text.strip()
-                        if phone_text:
-                            print("Phone:", phone_text)
-                print("Location:", location)
-                print()  # Print an empty line for better readability
-           
-        except Exception as e:
-            print("Error occurred:", e)
+class BookType(SQLAlchemyObjectType):
+    class Meta:
+        model = Book
+        interfaces = (graphene.relay.Node,)
 
-unique_entries = set()
-scrape_page(unique_entries)
+class Query(ObjectType):
+    books=graphene.List(BookType)
+    Book=graphene.Field(BookType,id=graphene.Int())
 
-while True:
-    button = driver.find_element(By.XPATH, '//button[@aria-label="Next"]')    
-    driver.execute_script("arguments[0].click();", button)
-    time.sleep(2)
-    scrape_page(unique_entries)
-# 2 side by side rating tabel acha bana ke do uski css design 
+    def resolve_books(self, info):
+        return SessionLocal().query(Book).all()
+    def resolve_books(self, info, id):
+        return SessionLocal().query(Book).filter(Book.id==id).first()
+    
+Schema = graphene.Schema(query=Query)
+app.add_route("/graphql", GraphQLApp(schema=Schema(query=Query)))
 
 
 
-
-# Inside the scrape_page function
-location = element.find_element(By.XPATH, './/a[@role="link"]').get_attribute("href")
-location_text = convert_location_link(location)
-print(location_text)
+INFO:     Will watch for changes in these directories: ['D:\\Book Management System']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [12272] using WatchFiles
+Process SpawnProcess-1:
+Traceback (most recent call last):
+  File "C:\Program Files\Python311\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Program Files\Python311\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "D:\Book Management System\venv\Lib\site-packages\uvicorn\_subprocess.py", line 78, in subprocess_started
+    target(sockets=sockets)
+  File "D:\Book Management System\venv\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\base_events.py", line 653, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "D:\Book Management System\venv\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "D:\Book Management System\venv\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "D:\Book Management System\venv\Lib\site-packages\uvicorn\config.py", line 433, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Book Management System\venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "D:\Book Management System\app.py", line 2, in <module>
+    import graphene
+  File "D:\Book Management System\venv\Lib\site-packages\graphene\__init__.py", line 3, in <module>
+    from .types import (
+  File "D:\Book Management System\venv\Lib\site-packages\graphene\types\__init__.py", line 2, in <module>
+    from graphql import ResolveInfo
+ImportError: cannot import name 'ResolveInfo' from 'graphql' (D:\Book Management System\venv\Lib\site-packages\graphql\__init__.py)
 
 '''
-
-
-
-
-
-
-

@@ -99,8 +99,6 @@ option[value="0"] {
   width: 50%;
   margin: 0 auto; /* Center align the table */
   border-collapse: collapse;
-  vertical-align: top;
-  margin-right: 5px;
 }
 
 
