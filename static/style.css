@@ -1,78 +1,73 @@
-/* styles.css */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f8f9fa; /* Light background color */
+  background-color: #f8f9fa;
 }
 
 .form-container {
-  width: 98%; /* Increased width for better visibility */
+  width: 98%;
   margin: auto;
-  padding: 20px; /* Added padding for spacing */
-  background-color: #fff; /* White background for form */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
-  margin-bottom: 20px; /* Increased margin for spacing */
+  margin-bottom: 20px;
 }
 
 .form-group label,
 .form-group select {
-  display: block; /* Labels and selects on separate lines */
-  margin-bottom: 8px; /* Space between label and select */
-  font-size: 18px; /* Larger font size for better readability */
-  color: #333; /* Text color */
+  display: block;
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #333;
 }
 
 #category {
-  width: 49%; /* Full width for the dropdown */
-  padding: 10px; /* Add padding */
-  border: 1px solid #ccc; /* Add border */
-  border-radius: 5px; /* Add border radius */
-  margin-bottom: 20px; /* Add spacing below the dropdown */
+  width: 49%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
 }
 
 .country-city-container {
   display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to next line */
-  margin-top: 20px; /* Add margin at the top */
+  flex-wrap: wrap;
+  margin-top: 20px;
 }
 
 .country-city-container .form-group {
-  flex-basis: calc(50% - 10px); /* Each form group takes up half of the container width with some margin */
+  flex-basis: calc(50% - 10px);
 }
 
 .country-city-container .form-group select {
-  width: 100%; /* Full width for selects */
-  padding: 10px; /* Add padding */
-  border: 1px solid #ccc; /* Add border */
-  border-radius: 5px; /* Add border radius */
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-/* Apply CSS to the label element */
 label[for="category"],
 label[for="country"],
 label[for="city"] {
-  font-weight: bold; /* Make the text bold */
-  display: block; /* Ensure label is displayed as block */
-  margin-bottom: 8px; /* Add spacing below the label */
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
 }
 
-
-/* Apply CSS to the option element */
 option[value="0"] {
   font-weight: bold;
-  text-align: center; 
-  color: #333; 
+  text-align: center;
+  color: #333;
 }
 
-/* Add space between country and city dropdowns */
 .country-city-container .form-group:nth-child(odd) {
-  margin-right: 5px; 
+  margin-right: 5px;
 }
 .country-city-container .form-group:nth-child(even) {
-  margin-left: 5px; 
+  margin-left: 5px;
 }
 
 .rating-container {
@@ -82,7 +77,7 @@ option[value="0"] {
 }
 
 .rating {
-  font-weight: bold; 
+  font-weight: bold;
   color: #961b1b;
   font-size: 1.3rem;
   cursor: pointer;
@@ -95,12 +90,11 @@ option[value="0"] {
 }
 
 #ratings-table {
-  display: none; 
+  display: none;
   width: 50%;
-  margin: 0 auto; /* Center align the table */
+  margin: 0 auto;
   border-collapse: collapse;
 }
-
 
 #ratings-table th,
 #ratings-table td {
@@ -127,12 +121,9 @@ option[value="0"] {
   background-color: #ddd;
 }
 
-
-
 .submit-button-container {
-  text-align: center; /* Center align submit button */
+  text-align: center;
   margin-top: 24px;
-  
 }
 
 .form-container select#location,
